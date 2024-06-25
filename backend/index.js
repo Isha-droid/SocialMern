@@ -5,6 +5,8 @@ const helmet= require("helmet")
 const morgan= require("morgan")
 const userRoute = require("./routes/users"); // Import userRoute module
 const authRoute = require("./routes/auth"); // Import userRoute module
+const postRoute = require("./routes/post"); // Import userRoute module
+
 
 
 
@@ -17,6 +19,8 @@ app.use(morgan("common"))
 
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/post", postRoute);
+
 
 
 
