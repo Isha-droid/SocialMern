@@ -1,10 +1,12 @@
 import React from 'react';
 import Share from './Share';
+import Post from './Post';
 
 const Feed = () => {
   return (
-    <div className="flex justify-center items-center h-full">
+    <div className="justify-center items-center h-full">
       <Share />
+      <Post/>
     </div>
   );
 };
