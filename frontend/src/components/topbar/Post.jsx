@@ -1,56 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaHeart, FaRegComment, FaShare } from 'react-icons/fa';
 import { BsThreeDots } from 'react-icons/bs';
-import profileImage from '../../assets/person/1.jpeg'; // Replace with your actual path
-import postImage from '../../assets/post/1.jpeg'; // Replace with your actual path
 
-const Post = () => {
+const Post = ({ post, user }) => {
+  const [likes, setLikes] = useState(post.like);
+  const [liked, setLiked] = useState(false);
+
+  const handleLike = () => {
+    if (liked) {
+      setLikes(likes - 1);
+    } else {
+      setLikes(likes + 1);
+    }
+    setLiked(!liked);
+  };
+
   return (
-    <div className="post bg-white shadow-md rounded-lg p-6 mb-6 transition-transform transform hover:scale-105">
-      <div className="wrapper">
-        <div className="postTop flex justify-between items-center mb-4">
-          <div className="flex items-center space-x-4">
-            <img
-              src={profileImage}
-              className="h-12 w-12 rounded-full object-cover border-2 border-indigo-500"
-              alt="Profile"
-            />
-            <div>
-              <span className="font-semibold text-gray-900">John Doe</span>
-              <br />
-              <span className="text-sm text-gray-500">5 mins ago</span>
-            </div>
-          </div>
-          <BsThreeDots className="text-gray-600 cursor-pointer" />
-        </div>
-        <div className="postCenter mb-4">
-          <p className="text-gray-800 mb-4">Having a great time at the beach! The weather is amazing and the waves are perfect. #beachday #funinthesun</p>
+    <div className="bg-white shadow-md rounded-lg p-4 mb-6 m-auto">
+      <div className="postTop flex items-center justify-between">
+        <div className="flex items-center space-x-3">
           <img
-            src={postImage}
-            className="w-full rounded-md object-cover"
-            alt="Post"
+            src={user.profilePicture}
+            alt={user.username}
+            className="h-10 w-10 rounded-full object-cover"
           />
-        </div>
-        <div className="postBottom flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <button className="flex items-center space-x-1 text-red-500 hover:text-red-600 transition-colors">
-              <FaHeart className="cursor-pointer hover:scale-125 transition-transform" />
-              <span className="text-sm">Like</span>
-            </button>
-            <button className="flex items-center space-x-1 text-blue-500 hover:text-blue-600 transition-colors">
-              <FaRegComment className="cursor-pointer hover:scale-125 transition-transform" />
-              <span className="text-sm">Comment</span>
-            </button>
-            <button className="flex items-center space-x-1 text-green-500 hover:text-green-600 transition-colors">
-              <FaShare className="cursor-pointer hover:scale-125 transition-transform" />
-              <span className="text-sm">Share</span>
-            </button>
-            <span className="text-gray-600 font-medium">32 likes</span>
-          </div>
           <div>
-            <span className="text-gray-600 hover:underline cursor-pointer">View all 8 comments</span>
+            <span className="font-semibold">{user.username}</span>
+            <span className="text-gray-500 text-sm block">{post.date}</span>
           </div>
         </div>
+        <button className="text-gray-500 hover:text-gray-700">
+          <BsThreeDots />
+        </button>
+      </div>
+      <div className="postCenter my-3">
+        {post.desc && <p className="text-gray-700 mb-2">{post.desc}</p>}
+        <img src={post.photo} alt="Post" className="w-full rounded-lg" />
+      </div>
+      <div className="postBottom flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <FaHeart
+            className={`text-gray-500 cursor-pointer ${liked ? 'text-red-500' : ''}`}
+            onClick={handleLike}
+          />
+          <FaShare className="text-blue-500 cursor-pointer" />
+          <span className="text-gray-500 text-sm">{likes} {likes === 1 ? 'like' : 'likes'}</span>
+        </div>
+        <span className="text-gray-500 text-sm">
+          {post.comment} {post.comment === 1 ? 'comment' : 'comments'}
+        </span>
       </div>
     </div>
   );

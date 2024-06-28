@@ -1,9 +1,10 @@
 import React from 'react'
+import UserRegister from '../../components/topbar/UserRegister'
 
 const Register = () => {
   return (
     <div>
-      Regsiter page
+      <UserRegister/>
     </div>
   )
 }

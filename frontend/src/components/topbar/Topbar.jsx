@@ -51,7 +51,10 @@ const Topbar = () => {
             <div className="ml-4 relative">
               <button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
                 <span className="sr-only">Open user menu</span>
-                <FaUser className="h-8 w-8 rounded-full text-gray-900" aria-hidden="true" />
+                <a href="/profile">
+      <FaUser className="h-8 w-8 rounded-full text-gray-900" aria-hidden="true" />
+    </a>
+
               </button>
             </div>
           </div>

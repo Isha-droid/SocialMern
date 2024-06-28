@@ -7,12 +7,12 @@ const Home = () => {
   return (
     <div className="flex">
       {/* Leftbar (1/4 of the screen) */}
-      <div className="w-1/4  mt-8">
+      <div className="w-1/4 mt-8">
         <Leftbar />
       </div>
 
       {/* Main Content Area (1/2 of the screen) */}
-      <div className="w-1/2 m-auto mt-8 ">
+      <div className="w-1/2 mt-8 mx-auto"> {/* mx-auto for equal margins */}
         <Feed />
         {/* Add more components as needed */}
 
