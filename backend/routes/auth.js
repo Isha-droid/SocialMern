@@ -35,7 +35,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Route for user login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -55,7 +54,8 @@ router.post("/login", async (req, res) => {
     // Generate JWT token
     const token = jwt.sign({ userId: user._id }, "your_jwt_secret", { expiresIn: "1h" });
 
-    res.status(200).json({ token , user});
+    // Return token and user data
+    res.status(200).json({ token, user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

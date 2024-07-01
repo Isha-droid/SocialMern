@@ -6,6 +6,7 @@ const morgan= require("morgan")
 const userRoute = require("./routes/users"); // Import userRoute module
 const authRoute = require("./routes/auth"); // Import userRoute module
 const postRoute = require("./routes/post"); // Import userRoute module
+const cors = require('cors');
 
 
 
@@ -14,6 +15,7 @@ const postRoute = require("./routes/post"); // Import userRoute module
 
 const app = express();
 app.use(express.json())
+app.use(cors())
 app.use(helmet())
 app.use(morgan("common"))
 

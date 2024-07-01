@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
 import { Link } from 'react-router-dom'; // If using React Router, adjust as needed
-import fashionBackground from '../../assets/fashionbg.jpeg'; // Example fashion background image (replace with actual image)
+import axios from 'axios';
 
 const UserRegister = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +9,8 @@ const UserRegister = () => {
     email: '',
     password: '',
   });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,16 +20,28 @@ const UserRegister = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Use formData object for further processing (e.g., API call, validation)
-    console.log('Form data:', formData);
-    // Clear form after submission (optional)
-    setFormData({
-      name: '',
-      email: '',
-      password: '',
-    });
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/register', {
+        username: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log(response);
+      setSuccess(response.data.message);
+      setError('');
+      // Clear form after successful submission
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+      });
+    } catch (error) {
+      console.error('Error registering:', error.response.data.message);
+      setError(error.response.data.message);
+      setSuccess('');
+    }
   };
 
   return (
@@ -37,6 +51,8 @@ const UserRegister = () => {
           <h2 className="text-3xl font-bold text-pink-600 mb-2">Join Us</h2>
           <p className="text-sm text-pink-600 italic">"Fashion is about something that comes by being with us."</p>
         </div>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {success && <p className="text-green-500 text-center mb-4">{success}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="name" className="block text-sm font-medium text-pink-700">Full Name</label>

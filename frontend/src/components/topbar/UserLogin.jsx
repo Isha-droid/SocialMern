@@ -1,12 +1,17 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { FaUser, FaLock } from 'react-icons/fa';
-import { Link } from 'react-router-dom'; // If using React Router, adjust as needed
+import { Link,useNavigate } from 'react-router-dom';
 
 const UserLogin = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
+  const navigate= useNavigate();
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(''); // Define setSuccess state setter function
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,10 +21,25 @@ const UserLogin = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Use formData object for further processing (e.g., API call, validation)
-    console.log('Form data:', formData);
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        email: formData.username, // Assuming username is the email in your form
+        password: formData.password,
+      });
+
+      // Save token to localStorage or context
+      localStorage.setItem('token', response.data.token);
+
+      // Set success message and clear any previous errors
+      setSuccess('Login successful!');
+      setError('');
+      navigate("/")
+    } catch (error) {
+      console.error('Error logging in:', error.response.data.message);
+      setError(error.response.data.message);
+    }
   };
 
   return (
@@ -70,6 +90,8 @@ const UserLogin = () => {
             Log In
           </button>
         </form>
+        {error && <p className="mt-2 text-center text-red-600">{error}</p>}
+        {success && <p className="mt-2 text-center text-green-600">{success}</p>}
         <p className="mt-4 text-center text-pink-600 text-sm">
           Don't have an account? <Link to="/signup" className="font-medium text-pink-500 hover:text-pink-700">Sign up here</Link>
         </p>
