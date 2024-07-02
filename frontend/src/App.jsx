@@ -6,12 +6,15 @@ import Register from './pages/register/Register';
 import Profile from './pages/profile/Profile';
 import './App.css';
 import Topbar from './components/topbar/Topbar';
+import { AuthContextProvider } from './context/AuthContext';
 
 function App() {
   return (
+    <AuthContextProvider>
+
     <Router>
       <div className="App">
-        <Topbar/>
+        <Topbar/>/
         <Routes>
           Topbar
           <Route exact path="/"  element={<Home />} />
@@ -21,6 +24,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </AuthContextProvider>
   );
 }
 

@@ -1,17 +1,20 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaUser, FaLock } from 'react-icons/fa';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { loginCall } from '../../apiCalls';
+import { AuthContext } from '../../context/AuthContext';
 
 const UserLogin = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
-  const navigate= useNavigate();
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(''); // Define setSuccess state setter function
+  const navigate = useNavigate();
+  const [err, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
+  const { user, isFetching, error, dispatch } = useContext(AuthContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,25 +26,17 @@ const UserLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { username, password } = formData;
+
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
-        email: formData.username, // Assuming username is the email in your form
-        password: formData.password,
-      });
+      await loginCall({ username, password }, dispatch);
 
-      // Save token to localStorage or context
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', response.data.user);
-      console.log("user saved in local storage")
-
-
-      // Set success message and clear any previous errors
       setSuccess('Login successful!');
       setError('');
-      navigate("/")
+      navigate("/");
     } catch (error) {
-      console.error('Error logging in:', error.response.data.message);
-      setError(error.response.data.message);
+      console.error('Error logging in:', error);
+      setError('Login failed. Please try again.');
     }
   };
 
@@ -89,11 +84,15 @@ const UserLogin = () => {
               />
             </div>
           </div>
-          <button type="submit" className="bg-pink-600 hover:bg-pink-700 text-white w-full py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300">
-            Log In
+          <button 
+            type="submit" 
+            className={`bg-pink-600 hover:bg-pink-700 text-white w-full py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300 ${isFetching ? 'cursor-not-allowed' : ''}`}
+            disabled={isFetching}
+          >
+            {isFetching ? 'Loading...' : 'Log In'}
           </button>
         </form>
-        {error && <p className="mt-2 text-center text-red-600">{error}</p>}
+        {err && <p className="mt-2 text-center text-red-600">{err}</p>}
         {success && <p className="mt-2 text-center text-green-600">{success}</p>}
         <p className="mt-4 text-center text-pink-600 text-sm">
           Don't have an account? <Link to="/signup" className="font-medium text-pink-500 hover:text-pink-700">Sign up here</Link>
