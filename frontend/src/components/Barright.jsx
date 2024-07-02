@@ -4,11 +4,11 @@ import personImage from '../assets/person/3.jpeg';
 
 const Barright = () => {
   return (
-    <div className="w-1/4 bg-white shadow-md rounded-lg p-6 fixed right-0 top-16 overflow-y-auto h-full">
+    <div className="w-1/4 bg-pink-50 shadow-md rounded-lg p-6 fixed right-0 top-16 overflow-y-auto h-full">
       <div className="wrapper space-y-6">
         {/* Fashion News Section */}
         <div className="fashionNews">
-          <h2 className="text-indigo-700 font-bold mb-4">Fashion News</h2>
+          <h2 className="text-pink-700 font-bold mb-4">Fashion News</h2>
           <div className="space-y-4">
             <div className="flex items-start space-x-3 bg-gray-50 p-3 rounded-md shadow-sm hover:shadow-md transition-shadow duration-300">
               <img src="https://source.unsplash.com/random/50x50/?fashion,summer" alt="Fashion News 1" className="h-12 w-12 rounded-md object-cover" />
@@ -45,7 +45,7 @@ const Barright = () => {
 
         {/* Online Influencers */}
         <div className="onlineInfluencers">
-          <h3 className="text-indigo-700 font-bold mb-4">Online Influencers</h3>
+          <h3 className="text-pink-700 font-bold mb-4">Online Influencers</h3>
           <div className="space-y-3">
             <div className="flex items-center space-x-3 bg-gray-50 p-3 rounded-md shadow-sm hover:shadow-md transition-shadow duration-300">
               <img src={personImage} alt="Influencer" className="h-10 w-10 rounded-full object-cover" />

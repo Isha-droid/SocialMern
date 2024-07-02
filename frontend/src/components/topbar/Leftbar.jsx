@@ -14,49 +14,49 @@ const Leftbar = () => {
   ];
 
   return (
-    <div className="bg-white shadow-md h-screen overflow-y-auto fixed top-16 left-0 w-1/5">
+    <div className="bg-pink-50 shadow-md h-screen overflow-y-auto fixed top-16 left-0 w-1/5">
       <ul className="flex flex-col items-start p-4 space-y-2">
         {/* Navigation items */}
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <FaHome className="text-indigo-600" />
-          <span className="text-gray-900 font-medium ml-2">Feed</span>
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <FaHome className="text-pink-600" />
+          <span className="text-gray-900 font-medium ml-2">Fashion Feed</span>
         </li>
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <FaComments className="text-indigo-600" />
-          <span className="text-gray-900 font-medium ml-2">Chats</span>
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <FaComments className="text-pink-600" />
+          <span className="text-gray-900 font-medium ml-2">Fashion Chats</span>
         </li>
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <FaVideo className="text-indigo-600" />
-          <span className="text-gray-900 font-medium ml-2">Videos</span>
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <FaVideo className="text-pink-600" />
+          <span className="text-gray-900 font-medium ml-2">Fashion Videos</span>
         </li>
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <FaUsers className="text-indigo-600" />
-          <span className="text-gray-900 font-medium ml-2">Groups</span>
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <FaUsers className="text-pink-600" />
+          <span className="text-gray-900 font-medium ml-2">Fashion Groups</span>
         </li>
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <FaBookmark className="text-indigo-600" />
-          <span className="text-gray-900 font-medium ml-2">Bookmarks</span>
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <FaBookmark className="text-pink-600" />
+          <span className="text-gray-900 font-medium ml-2">Fashion Bookmarks</span>
         </li>
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <FaQuestion className="text-indigo-600" />
-          <span className="text-gray-900 font-medium ml-2">Questions</span>
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <FaQuestion className="text-pink-600" />
+          <span className="text-gray-900 font-medium ml-2">Fashion Questions</span>
         </li>
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <FaBriefcase className="text-indigo-600" />
-          <span className="text-gray-900 font-medium ml-2">Jobs</span>
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <FaBriefcase className="text-pink-600" />
+          <span className="text-gray-900 font-medium ml-2">Fashion Jobs</span>
         </li>
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <FaCalendarAlt className="text-indigo-600" />
-          <span className="text-gray-900 font-medium ml-2">Events</span>
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <FaCalendarAlt className="text-pink-600" />
+          <span className="text-gray-900 font-medium ml-2">Fashion Events</span>
         </li>
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <FaBook className="text-indigo-600" />
-          <span className="text-gray-900 font-medium ml-2">Courses</span>
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <FaBook className="text-pink-600" />
+          <span className="text-gray-900 font-medium ml-2">Fashion Courses</span>
         </li>
 
         {/* Show more button */}
-        <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
-          <button className="flex items-center text-indigo-600">
+        <li className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
+          <button className="flex items-center text-pink-600">
             <FaChevronDown />
             <span className="text-gray-900 font-medium ml-2">Show More</span>
           </button>
@@ -66,7 +66,7 @@ const Leftbar = () => {
         <li className="flex flex-col space-y-2 mt-4">
           <span className="text-gray-600 font-medium ml-4 mb-2">Friends</span>
           {friends.map((friend) => (
-            <div key={friend.id} className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-md transition-colors duration-300 w-full">
+            <div key={friend.id} className="flex items-center space-x-3 hover:bg-pink-100 p-2 rounded-md transition-colors duration-300 w-full">
               <img src={friend.avatar} alt={friend.name} className="h-8 w-8 rounded-full" />
               <span className="text-gray-900 font-medium ml-2">{friend.name}</span>
             </div>

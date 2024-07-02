@@ -1,16 +1,38 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post"); // Assuming Post model path
+const User= require("../models/User")
 
 const authMiddleware = require("../middleware/authMiddleware"); // Path to your auth middleware
 
-// Apply authMiddleware to all routes in this router
-router.use(authMiddleware);
+// Create a new post (requires auth)
+router.post('/profile', async (req, res) => {
+  try {
+    const { username } = req.body;
+    console.log(username)
+    console.log(`Fetching profile for username: ${username}`);
+    
+    // Find the user by username
+    const user = await User.findOne({ username });
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-// Create a new post
-router.post("/", async (req, res) => {
+    // Find posts by user ID
+    const posts = await Post.find({ userId: user._id });
+
+    res.json({ user, posts });
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+router.post("/", authMiddleware, async (req, res) => {
   const userId = req.user.userId;
-  console.log(userId)
+  console.log(userId);
   const { desc, img } = req.body;
   try {
     const newPost = new Post({
@@ -18,7 +40,7 @@ router.post("/", async (req, res) => {
       desc,
       img,
     });
-    console.log(newPost)
+    console.log(newPost);
 
     const savedPost = await newPost.save();
     res.status(201).json(savedPost);
@@ -28,23 +50,22 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Update a post by ID (only the post owner)
-router.put("/:id", async (req, res) => {
+// Update a post by ID (only the post owner, requires auth)
+router.put("/:id", authMiddleware, async (req, res) => {
   const postId = req.params.id;
   const { desc, img } = req.body;
   const userId = req.user.userId;
 
   try {
     const post = await Post.findById(postId);
-    console.log(post)
+    console.log(post);
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
-    console.log("data base "+ post.userId)
-    console.log("jwt "+userId)
+    console.log("database " + post.userId);
+    console.log("jwt " + userId);
 
-
-    if (post.userId.toString()!== userId.toString()) {
+    if (post.userId.toString() !== userId.toString()) {
       return res.status(403).json({ message: "Unauthorized access" });
     }
 
@@ -59,8 +80,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Delete a post by ID (only the post owner)
-router.delete("/:id", async (req, res) => {
+// Delete a post by ID (only the post owner, requires auth)
+router.delete("/:id", authMiddleware, async (req, res) => {
   const postId = req.params.id;
   const userId = req.user.userId;
 
@@ -71,11 +92,11 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    if (post.userId.toString() !=userId.toString()) {
+    if (post.userId.toString() != userId.toString()) {
       return res.status(403).json({ message: "Unauthorized access" });
     }
 
-    await post.deleteOne({postId});
+    await post.deleteOne({ postId });
     res.json({ message: "Post deleted successfully" });
   } catch (error) {
     console.error(error);
@@ -83,12 +104,12 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Like a post
-router.put("/:id/like", async (req, res) => {
+// Like a post (requires auth)
+router.put("/:id/like", authMiddleware, async (req, res) => {
   const postId = req.params.id;
   const userId = req.user.userId;
-  console.log(postId)
-  console.log(userId)
+  console.log(postId);
+  console.log(userId);
 
   try {
     const post = await Post.findById(postId);
@@ -102,7 +123,7 @@ router.put("/:id/like", async (req, res) => {
       await post.save();
       res.json({ message: "Post liked" });
     } else {
-      post.likes = post.likes.filter(id => id.toString() !== userId);
+      post.likes = post.likes.filter((id) => id.toString() !== userId);
       await post.save();
       res.json({ message: "Post unliked" });
     }
@@ -112,7 +133,7 @@ router.put("/:id/like", async (req, res) => {
   }
 });
 
-// Get a post by ID
+// Get a post by ID (no auth required)
 router.get("/:id", async (req, res) => {
   const postId = req.params.id;
 
@@ -130,7 +151,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Get all posts
+// Get all posts (no auth required)
 router.get("/", async (req, res) => {
   try {
     const posts = await Post.find();
@@ -140,5 +161,8 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+
 
 module.exports = router;

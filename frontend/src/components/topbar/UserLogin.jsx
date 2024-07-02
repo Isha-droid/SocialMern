@@ -31,6 +31,9 @@ const UserLogin = () => {
 
       // Save token to localStorage or context
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', response.data.user);
+      console.log("user saved in local storage")
+
 
       // Set success message and clear any previous errors
       setSuccess('Login successful!');

@@ -2,11 +2,10 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User"); // Assuming User model is defined in ./User
 const authMiddleware = require('../middleware/authMiddleware'); // Path to your auth middleware
-
+const mongoose = require("mongoose");
 // Apply authMiddleware to all routes in this router
-router.use(authMiddleware);
 // Update a user by ID (only the user themselves)
-router.put("/:id", async (req, res) => {
+router.put("/:id",authMiddleware, async (req, res) => {
   const { username, email, profilePicture, coverPicture, desc, city, relationship } = req.body;
   const userId = req.params.id;
   const loggedInUserId = req.user.userId; // Assuming you have this information in the request
@@ -68,11 +67,18 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Get a user by ID
-router.get("/:id", async (req, res) => {
-  const userId = req.params.id;
+router.get("/:identifier", async (req, res) => {
+  const identifier = req.params.identifier;
 
   try {
-    let user = await User.findById(userId);
+    let user;
+
+    // Check if the identifier is a valid ObjectId (assuming it's MongoDB)
+    if (mongoose.Types.ObjectId.isValid(identifier)) {
+      user = await User.findById(identifier);
+    } else {
+      user = await User.findOne({ username: identifier });
+    }
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
