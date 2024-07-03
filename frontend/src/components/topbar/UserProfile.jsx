@@ -1,45 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { FaHeart, FaRegComment, FaShare, FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
 import { formatDistanceToNow } from 'date-fns';
+import { AuthContext } from '../../context/AuthContext';
 
-const UserProfile = ({ match }) => {
+const UserProfile = () => {
+  const { user: currentUser } = useContext(AuthContext); // Assuming currentUser is available in AuthContext
+  const { username } = useParams(); // Get the username from the URL parameters
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [likes, setLikes] = useState(0); // Initial likes count
-  const [following, setFollowing] = useState(false); // Initial following status
-  const [followers, setFollowers] = useState(0); // Initial followers count
-  const [showLikesModal, setShowLikesModal] = useState(false); // State to toggle likes modal visibility
-  const [points, setPoints] = useState(0); // Initial points count
-  const [discount, setDiscount] = useState(0); // Initial discount percentage
+  const [likes, setLikes] = useState(0);
+  const [following, setFollowing] = useState(false);
+  const [followers, setFollowers] = useState(0);
+  const [showLikesModal, setShowLikesModal] = useState(false);
+  const [points, setPoints] = useState(0);
+  const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.post('http://localhost:5000/api/post/profile', {
-          username: 'bob456'
+          username: username // Use the username from the URL
         });
-        console.log(response.data)
         const { user, posts } = response.data;
         setUser(user);
         setPosts(posts);
         setLikes(posts.reduce((acc, post) => acc + post.likes.length, 0));
         setFollowers(user.followers.length);
-        setFollowing(user.following.includes(currentUser._id)); // assuming `currentUser` is available
+        setFollowing(user.following.includes(currentUser._id));
       } catch (error) {
         console.error('Error fetching user profile:', error);
       }
     };
-    
+
     fetchUserProfile();
-  }, []);
+  }, [username, currentUser._id]);
 
   useEffect(() => {
-    // Calculate points and discount based on likes
     const calculateRewards = () => {
-      const newPoints = Math.floor(likes / 10); // Example: 1 point for every 10 likes
+      const newPoints = Math.floor(likes / 10);
       setPoints(newPoints);
-      // Example: Provide 5% discount for every 5 points
       const newDiscount = Math.floor(newPoints / 5) * 5;
       setDiscount(newDiscount);
     };
@@ -137,8 +138,8 @@ const UserProfile = ({ match }) => {
               {posts.map(post => (
                 <li key={post._id} className="flex items-center justify-between py-2">
                   <div className="flex items-center space-x-2">
-                    <img src={Users.find(user => user._id === post.userId)?.profilePicture} alt="User" className="h-10 w-10 rounded-full object-cover" />
-                    <span className="font-semibold">{Users.find(user => user._id === post.userId)?.username}</span>
+                    <img src={post.user.profilePicture} alt="User" className="h-10 w-10 rounded-full object-cover" />
+                    <span className="font-semibold">{post.user.username}</span>
                   </div>
                   <span className="text-gray-500 text-sm">{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</span>
                 </li>

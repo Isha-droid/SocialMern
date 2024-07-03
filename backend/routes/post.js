@@ -152,15 +152,23 @@ router.get("/:id", async (req, res) => {
 });
 
 // Get all posts (no auth required)
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware,async (req, res) => {
+  const userId = req.user.userId;
   try {
-    const posts = await Post.find();
+    // Find users that the authenticated user is following
+    const user = await User.findById(userId);
+    const followingUsersIds = user.following;
+
+    // Find posts from users in followingUsersIds
+    const posts = await Post.find({ user: { $in: followingUsersIds } });
+
     res.json(posts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 

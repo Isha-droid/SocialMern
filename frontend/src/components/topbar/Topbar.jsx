@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaSearch, FaUser, FaBell, FaEnvelope } from 'react-icons/fa';
 import { FiShoppingBag } from 'react-icons/fi';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import logo from '../../assets/logo.jpeg';
+import { AuthContext } from '../../context/AuthContext';
 
 const Topbar = () => {
+  const { user } = useContext(AuthContext);
+
   return (
     <div className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -48,15 +52,18 @@ const Topbar = () => {
             <button className="p-1 rounded-full text-gray-900 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
               <FiShoppingBag className="h-6 w-6" aria-hidden="true" />
             </button>
-            <div className="ml-4 relative">
-              <button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
-                <span className="sr-only">Open user menu</span>
-                <a href="/profile">
-      <FaUser className="h-8 w-8 rounded-full text-gray-900" aria-hidden="true" />
-    </a>
-
-              </button>
-            </div>
+            {user ? (
+              <div className="ml-4 relative">
+                <Link to={`/profile/${user.username}`} className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                  <span className="sr-only">Open user menu</span>
+                  {user.profilePicture ? (
+                    <img src={user.profilePicture} alt="User Profile" className="h-8 w-8 rounded-full" />
+                  ) : (
+                    <FaUser className="h-8 w-8 rounded-full text-gray-900" aria-hidden="true" />
+                  )}
+                </Link>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

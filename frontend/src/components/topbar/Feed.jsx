@@ -6,13 +6,22 @@ import Post from './Post';
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(true); // State to manage loading state
+  const [error, setError] = useState(""); // State to manage errors
 
   useEffect(() => {
-    console.log("Feed rendered");
-
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/post/');
+        const token = localStorage.getItem('token');
+
+        // Set headers with Authorization token
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        };
+
+        const response = await axios.get('http://localhost:5000/api/post/', config);
         console.log(response.data);
         const postsWithUser = await Promise.all(
           response.data.map(async (post) => {
@@ -21,13 +30,28 @@ const Feed = () => {
           })
         );
         setPosts(postsWithUser);
+        setLoading(false); // Set loading to false after successful fetch
       } catch (error) {
         console.error("Error fetching posts:", error);
+        setError("Error fetching posts. Please try again."); // Set error message
+        setLoading(false); // Set loading to false on error
       }
     };
 
     fetchPosts();
   }, []);
+
+  if (loading) {
+    return <div className="h-full flex justify-center items-center">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="h-full flex justify-center items-center text-red-500">{error}</div>;
+  }
+
+  if (posts.length === 0) {
+    return <div className="h-full flex justify-center items-center">No posts available.</div>;
+  }
 
   return (
     <div className="justify-center items-center h-full">

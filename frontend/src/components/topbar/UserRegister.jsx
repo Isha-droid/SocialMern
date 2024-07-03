@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
-import { Link } from 'react-router-dom'; // If using React Router, adjust as needed
+import { Link, Navigate, useNavigate } from 'react-router-dom'; // If using React Router, adjust as needed
 import axios from 'axios';
 
 const UserRegister = () => {
+  const navigate= useNavigate()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,12 +32,14 @@ const UserRegister = () => {
       console.log(response);
       setSuccess(response.data.message);
       setError('');
+      
       // Clear form after successful submission
       setFormData({
         name: '',
         email: '',
         password: '',
       });
+      navigate("/login")
     } catch (error) {
       console.error('Error registering:', error.response.data.message);
       setError(error.response.data.message);

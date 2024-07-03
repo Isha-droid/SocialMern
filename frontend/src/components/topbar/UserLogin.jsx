@@ -27,9 +27,10 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { username, password } = formData;
+    const email = username
 
     try {
-      await loginCall({ username, password }, dispatch);
+      await loginCall({ email, password }, dispatch);
 
       setSuccess('Login successful!');
       setError('');

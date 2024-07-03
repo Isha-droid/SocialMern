@@ -16,7 +16,7 @@ export const AuthContextProvider = ({ children }) => {
 
   // Save user to localStorage whenever state.user changes
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(state.user));
+    console.log(state.user)
   }, [state.user]);
 
   return (

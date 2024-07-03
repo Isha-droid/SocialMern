@@ -37,7 +37,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
+  console.log("login route called ")
   try {
     // Check if user exists with the provided email
     let user = await User.findOne({ email });
@@ -55,6 +55,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ userId: user._id }, "your_jwt_secret", { expiresIn: "1h" });
 
     // Return token and user data
+    console.log(user)
     res.status(200).json({ token, user });
   } catch (error) {
     console.error(error);

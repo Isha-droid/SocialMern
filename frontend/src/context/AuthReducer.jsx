@@ -16,6 +16,7 @@ import {
           error: false,
         };
       case LOGIN_SUCCESS:
+        console.log("from context"+action.payload)
         return {
           user: action.payload,
           isFetching: false,
