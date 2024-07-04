@@ -24,7 +24,6 @@ const Share = () => {
 
       const response = await axios.post('http://localhost:5000/api/post', postData, config);
       console.log('Post successful:', response.data);
-      console.log(response.data)
       
       // Optionally, you can reset the input field after successful submission
       setText('');
@@ -54,7 +53,16 @@ const Share = () => {
         <div className="flex justify-between items-center">
           <div className="flex space-x-4">
             <button className="flex items-center space-x-1 text-gray-500 hover:text-indigo-600 focus:outline-none">
+
+              <label className="flex items-center space-x-1 text-gray-500 hover:text-indigo-600 focus:outline-none">
               <FaCamera />
+              <span className="text-sm">Upload Photo</span>
+              <input
+                type="file"
+                accept=".png, .jpeg, .jpg"
+                className="hidden"
+              />
+            </label>
               <span className="text-sm">Photo</span>
             </button>
             <button className="flex items-center space-x-1 text-gray-500 hover:text-indigo-600 focus:outline-none">

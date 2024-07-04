@@ -33,7 +33,11 @@ router.post('/profile', async (req, res) => {
 router.post("/", authMiddleware, async (req, res) => {
   const userId = req.user.userId;
   console.log(userId);
+
   const { desc, img } = req.body;
+  console.log(desc)
+  console.log(img)
+
   try {
     const newPost = new Post({
       userId,
