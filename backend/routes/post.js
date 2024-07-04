@@ -105,11 +105,10 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 });
 
 // Like a post (requires auth)
+
 router.put("/:id/like", authMiddleware, async (req, res) => {
   const postId = req.params.id;
   const userId = req.user.userId;
-  console.log(postId);
-  console.log(userId);
 
   try {
     const post = await Post.findById(postId);
@@ -133,6 +132,7 @@ router.put("/:id/like", authMiddleware, async (req, res) => {
   }
 });
 
+
 // Get a post by ID (no auth required)
 router.get("/:id", async (req, res) => {
   const postId = req.params.id;
@@ -152,21 +152,33 @@ router.get("/:id", async (req, res) => {
 });
 
 // Get all posts (no auth required)
-router.get("/", authMiddleware,async (req, res) => {
-  const userId = req.user.userId;
+router.get("/", authMiddleware ,async (req, res) => {
+  const username = req.user.username;
+  console.log(username)
   try {
-    // Find users that the authenticated user is following
-    const user = await User.findById(userId);
+    // Find the current user by username
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Get the list of user IDs that the current user is following
     const followingUsersIds = user.following;
 
-    // Find posts from users in followingUsersIds
-    const posts = await Post.find({ user: { $in: followingUsersIds } });
+    console.log("Following Users IDs:", followingUsersIds);
 
-    res.json(posts);
+    // Find posts from users in followingUsersIds
+    const posts = await Post.find({ userId: { $in: followingUsersIds } });
+
+    console.log("Posts from Following Users:", posts);
+
+    res.json({ success: true, posts });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
+
 });
 
 

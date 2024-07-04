@@ -22,14 +22,23 @@ const Feed = () => {
         };
 
         const response = await axios.get('http://localhost:5000/api/post/', config);
-        console.log(response.data);
-        const postsWithUser = await Promise.all(
-          response.data.map(async (post) => {
-            const userResponse = await axios.get(`http://localhost:5000/api/user/${post.userId}`);
-            return { ...post, user: userResponse.data };
-          })
-        );
-        setPosts(postsWithUser);
+
+        // Log the response to see what is being returned
+        console.log("API Response:", response.data);
+
+        // Check if response.data.posts is an array
+        if (response.data && Array.isArray(response.data.posts)) {
+          const postsWithUser = await Promise.all(
+            response.data.posts.map(async (post) => {
+              const userResponse = await axios.get(`http://localhost:5000/api/user/${post.userId}`);
+              return { ...post, user: userResponse.data };
+            })
+          );
+          setPosts(postsWithUser);
+        } else {
+          setError("Unexpected API response format");
+        }
+
         setLoading(false); // Set loading to false after successful fetch
       } catch (error) {
         console.error("Error fetching posts:", error);

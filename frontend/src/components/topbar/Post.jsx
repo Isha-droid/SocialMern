@@ -1,27 +1,50 @@
 import React, { useState } from 'react';
-import { FaHeart, FaShare } from 'react-icons/fa';
+import { FaHeart, FaShare, FaImage } from 'react-icons/fa';
 import { BsThreeDots } from 'react-icons/bs';
-import { FaUserCircle } from 'react-icons/fa'; // Import a default avatar icon from react-icons
+import { FaUserCircle } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Post = ({ post, user }) => {
   const [likes, setLikes] = useState(post.likes.length);
   const [liked, setLiked] = useState(false);
-  console.log(user.username);
 
-  const handleLike = () => {
-    if (liked) {
-      setLikes(likes - 1);
-    } else {
-      setLikes(likes + 1);
+  const handleLike = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      const response = await axios.put(`http://localhost:5000/api/post/${post._id}/like`, {}, config);
+      
+      if (response.data.message === "Post liked") {
+        setLikes(likes + 1);
+        alert("Post liked");
+      } else if (response.data.message === "Post unliked") {
+        if(likes>0){
+
+        
+        setLikes(likes-1);
+        }
+        toast.success("Post unliked");
+      }
+
+      setLiked(!liked);
+    } catch (error) {
+      console.error("Error liking/unliking post:", error);
+      toast.error("Error liking/unliking post");
     }
-    setLiked(!liked);
   };
 
   const formattedDate = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 mb-6 m-auto">
+    <div className="bg-white shadow-md rounded-lg p-4 mb-6 m-auto max-w-lg">
       <div className="postTop flex items-center justify-between">
         <div className="flex items-center space-x-3">
           {user?.profilePicture ? (
@@ -44,7 +67,11 @@ const Post = ({ post, user }) => {
       </div>
       <div className="postCenter my-3">
         {post.desc && <p className="text-gray-700 mb-2">{post.desc}</p>}
-        {post.photo && <img src={post.photo} alt="Post" className="w-full rounded-lg" />}
+        {post.img ? (
+          <img src={post.img} alt="Post" className="w-full rounded-lg" />
+        ) : (
+          <FaImage className="h-40 w-full text-gray-300" />
+        )}
       </div>
       <div className="postBottom flex items-center justify-between">
         <div className="flex items-center space-x-2">
@@ -56,7 +83,7 @@ const Post = ({ post, user }) => {
           <span className="text-gray-500 text-sm">{likes} {likes === 1 ? 'like' : 'likes'}</span>
         </div>
         <span className="text-gray-500 text-sm">
-          {post.comments} {post.comments === 1 ? 'comment' : 'comments'}
+          {post.comments?.length || 0} {post.comments?.length === 1 ? 'comment' : 'comments'}
         </span>
       </div>
     </div>

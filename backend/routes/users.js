@@ -92,30 +92,30 @@ router.get("/:identifier", async (req, res) => {
 });
 
 // Follow a user
-router.put("/follow/:id", async (req, res) => {
-  const userId = req.params.id;
-  const { followId } = req.body;
+router.put("/follow/:username", async (req, res) => {
+  const username = req.params.username;
+  const { followUsername } = req.body;
 
   try {
-    // Find the current user and the user to be followed
-    const user = await User.findById(userId);
-    const userToFollow = await User.findById(followId);
+    // Find the current user and the user to be followed by their usernames
+    const user = await User.findOne({ username: username });
+    const userToFollow = await User.findOne({ username: followUsername });
 
     if (!user || !userToFollow) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Check if the user is already following the other user
-    if (user.following.includes(followId)) {
+    if (user.following.includes(userToFollow._id)) {
       return res.status(400).json({ message: "You are already following this user" });
     }
 
-    // Add followId to the following array of the current user
-    user.following.push(followId);
+    // Add userToFollow._id to the following array of the current user
+    user.following.push(userToFollow._id);
     await user.save();
 
-    // Add userId to the followers array of the user being followed
-    userToFollow.followers.push(userId);
+    // Add user._id to the followers array of the user being followed
+    userToFollow.followers.push(user._id);
     await userToFollow.save();
 
     res.json({ message: "User followed successfully" });
