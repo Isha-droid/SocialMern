@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
 import { FaSearch, FaUser, FaBell, FaEnvelope } from 'react-icons/fa';
 import { FiShoppingBag } from 'react-icons/fi';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom'; 
 import logo from '../../assets/logo.jpeg';
 import { AuthContext } from '../../context/AuthContext';
 
 const Topbar = () => {
   const { user } = useContext(AuthContext);
-
   return (
     <div className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,7 +16,7 @@ const Topbar = () => {
               <img className="h-8 w-auto" src={logo} alt="Logo" />
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <a href="#" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600 transition-colors duration-300">
+              <a href="/" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600 transition-colors duration-300">
                 Home
               </a>
               <a href="/login" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600 transition-colors duration-300">
@@ -26,7 +25,7 @@ const Topbar = () => {
               <a href="/register" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600 transition-colors duration-300">
                 Categories
               </a>
-              <a href="#" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600 transition-colors duration-300">
+              <a href="/" className="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-indigo-600 transition-colors duration-300">
                 Contact
               </a>
             </div>
@@ -70,5 +69,4 @@ const Topbar = () => {
     </div>
   );
 };
-
 export default Topbar;

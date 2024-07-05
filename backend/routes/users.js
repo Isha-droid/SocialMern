@@ -158,5 +158,28 @@ router.put("/unfollow/:id", async (req, res) => {
   }
 });
 
+router.get("/friends/:userId", authMiddleware, async (req, res) => {
+  try {
+    // Find the user by ID
+    const user = await User.findById(req.params.userId);
+
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch the user's following (assumed to be friends)
+    const friends = await Promise.all(
+      user.following.map(async (friendId) => {
+        return await User.findById(friendId);
+      })
+    );
+
+    res.json(friends);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;

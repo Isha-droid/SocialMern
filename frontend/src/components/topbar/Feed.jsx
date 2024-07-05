@@ -13,19 +13,19 @@ const Feed = () => {
     const fetchPosts = async () => {
       try {
         const token = localStorage.getItem('token');
-
+  
         // Set headers with Authorization token
         const config = {
           headers: {
             Authorization: `Bearer ${token}`
           }
         };
-
+  
         const response = await axios.get('http://localhost:5000/api/post/', config);
-
+  
         // Log the response to see what is being returned
         console.log("API Response:", response.data);
-
+  
         // Check if response.data.posts is an array
         if (response.data && Array.isArray(response.data.posts)) {
           const postsWithUser = await Promise.all(
@@ -34,11 +34,15 @@ const Feed = () => {
               return { ...post, user: userResponse.data };
             })
           );
+  
+          // Sort posts by createdAt date in descending order (newest first)
+          postsWithUser.sort((p1, p2) => new Date(p2.createdAt) - new Date(p1.createdAt));
+  
           setPosts(postsWithUser);
         } else {
           setError("Unexpected API response format");
         }
-
+  
         setLoading(false); // Set loading to false after successful fetch
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -46,9 +50,10 @@ const Feed = () => {
         setLoading(false); // Set loading to false on error
       }
     };
-
+  
     fetchPosts();
   }, []);
+  
 
   if (loading) {
     return <div className="h-full flex justify-center items-center">Loading...</div>;

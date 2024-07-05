@@ -156,9 +156,9 @@ router.get("/:id", async (req, res) => {
 });
 
 // Get all posts (no auth required)
-router.get("/", authMiddleware ,async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   const username = req.user.username;
-  console.log(username)
+  console.log(username);
   try {
     // Find the current user by username
     const user = await User.findOne({ username });
@@ -172,6 +172,9 @@ router.get("/", authMiddleware ,async (req, res) => {
 
     console.log("Following Users IDs:", followingUsersIds);
 
+    // Include the current user's own user ID in the list
+    followingUsersIds.push(user._id);
+
     // Find posts from users in followingUsersIds
     const posts = await Post.find({ userId: { $in: followingUsersIds } });
 
@@ -182,8 +185,8 @@ router.get("/", authMiddleware ,async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
-
 });
+
 
 
 
