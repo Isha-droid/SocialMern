@@ -5,6 +5,11 @@ import logo from '../../assets/person/2.jpeg'; // Adjust the path based on your 
 
 const Share = () => {
   const [text, setText] = useState('');
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,15 +23,35 @@ const Share = () => {
         }
       };
 
+      let imageUrl = '';
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'myntra_social'); // Replace with your Cloudinary upload preset
+
+        const response = await fetch(
+          'https://api.cloudinary.com/v1_1/dp6r7jk5u/image/upload',
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+        const data = await response.json();
+        imageUrl = data.secure_url;
+        console.log(imageUrl)
+      }
+
       const postData = {
-        desc: text // Assuming your API expects 'desc' for the text input
+        desc: text,
+        img: imageUrl // Assuming your API expects 'image' for the uploaded image URL
       };
 
       const response = await axios.post('http://localhost:5000/api/post', postData, config);
       console.log('Post successful:', response.data);
       
-      // Optionally, you can reset the input field after successful submission
+      // Optionally, you can reset the input fields after successful submission
       setText('');
+      setFile(null);
     } catch (error) {
       console.error('Error posting:', error);
     }
@@ -52,19 +77,16 @@ const Share = () => {
         <hr className="my-2 border-gray-300" />
         <div className="flex justify-between items-center">
           <div className="flex space-x-4">
-            <button className="flex items-center space-x-1 text-gray-500 hover:text-indigo-600 focus:outline-none">
-
-              <label className="flex items-center space-x-1 text-gray-500 hover:text-indigo-600 focus:outline-none">
+            <label className="flex items-center space-x-1 text-gray-500 hover:text-indigo-600 focus:outline-none">
               <FaCamera />
               <span className="text-sm">Upload Photo</span>
               <input
                 type="file"
                 accept=".png, .jpeg, .jpg"
                 className="hidden"
+                onChange={handleFileChange}
               />
             </label>
-              <span className="text-sm">Photo</span>
-            </button>
             <button className="flex items-center space-x-1 text-gray-500 hover:text-indigo-600 focus:outline-none">
               <FaMapMarkerAlt />
               <span className="text-sm">Location</span>

@@ -96,8 +96,8 @@ const UserProfile = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map(post => (
                 <div key={post._id} className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                  {post.photo ? (
-                    <img src={post.photo} alt="Fashion" className="w-full h-64 object-cover" />
+                  {post.img ? (
+                    <img src={post.img} alt="Fashion" className="w-full h-64 object-cover" />
                   ) : (
                     <FaUserCircle className="w-full h-64 text-gray-500" />
                   )}
