@@ -6,7 +6,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { AuthContext } from '../../context/AuthContext';
 
 const UserProfile = () => {
-  const { user: currentUser } = useContext(AuthContext); // Assuming currentUser is available in AuthContext
+  const { user: currentUser } = useContext(AuthContext); 
   const { username } = useParams(); // Get the username from the URL parameters
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -21,7 +21,7 @@ const UserProfile = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.post('http://localhost:5000/api/post/profile', {
-          username: username // Use the username from the URL
+          username: username 
         });
         const { user, posts } = response.data;
         setUser(user);
@@ -60,6 +60,42 @@ const UserProfile = () => {
     alert('You are now live!');
   };
 
+  const handleFollow = async () => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/user/follow/${currentUser.username}`, {
+        followUsername: user.username,
+      });
+      alert(response.data.message)
+
+
+      if (response.data.message === "User followed successfully") {
+        setFollowing(true);
+        setFollowers(prev => prev + 1); // Increment followers count
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("There was an error following the user", error);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/user/unfollow/${currentUser.username}`, {
+        unfollowUsername: user.username,
+      });
+      alert(response.data.message)
+      if (response.data.message === "User unfollowed successfully") {
+        setFollowing(false);
+        setFollowers(prev => prev - 1); // Decrement followers count
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("There was an error unfollowing the user", error);
+    }
+  };
+
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -82,12 +118,23 @@ const UserProfile = () => {
                   <FaUserCircle className="text-4xl text-pink-600 cursor-pointer" />
                   <span className="text-gray-600">{followers} Followers</span>
                 </div>
-                <button
-                  onClick={() => setFollowing(!following)}
-                  className={`px-4 py-2 rounded-md ${following ? 'bg-gray-300 text-gray-600' : 'bg-pink-600 text-white hover:bg-pink-700'} focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300`}
-                >
-                  {following ? 'Following' : 'Follow'}
-                </button>
+                {currentUser._id != user._id && (
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={handleFollow}
+                      className={`px-4 py-2 rounded-md bg-pink-600 text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300 ${following && 'hidden'}`}
+                    >
+                      Follow
+                    </button>
+                    <button
+                      onClick={handleUnfollow}
+                      className={`px-4 py-2 rounded-md bg-gray-300 text-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300 ${!following && 'hidden'}`}
+                    >
+                      Unfollow
+                    </button>
+                  </div>
+                )}
+
               </div>
             </div>
           </div>

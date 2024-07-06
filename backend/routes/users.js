@@ -95,6 +95,7 @@ router.get("/:identifier", async (req, res) => {
 router.put("/follow/:username", async (req, res) => {
   const username = req.params.username;
   const { followUsername } = req.body;
+  console.log(followUsername)
 
   try {
     // Find the current user and the user to be followed by their usernames
@@ -107,7 +108,8 @@ router.put("/follow/:username", async (req, res) => {
 
     // Check if the user is already following the other user
     if (user.following.includes(userToFollow._id)) {
-      return res.status(400).json({ message: "You are already following this user" });
+      return res.json({ message: "You are already following this user" });
+
     }
 
     // Add userToFollow._id to the following array of the current user
@@ -125,30 +127,32 @@ router.put("/follow/:username", async (req, res) => {
   }
 });
 
-router.put("/unfollow/:id", async (req, res) => {
-  const userId = req.params.id;
-  const { unfollowId } = req.body;
+router.put("/unfollow/:username", async (req, res) => {
+  const username = req.params.username;
+  const { unfollowUsername } = req.body;
 
   try {
     // Find the current user and the user to be unfollowed
-    const user = await User.findById(userId);
-    const userToUnfollow = await User.findById(unfollowId);
+    const user = await User.findOne({ username: username });
+    console.log(unfollowUsername)
+    const userToUnfollow = await User.findOne({ username: unfollowUsername });
+    console.log(userToUnfollow)
 
     if (!user || !userToUnfollow) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the user is not following the other user
-    if (!user.following.includes(unfollowId)) {
-      return res.status(400).json({ message: "You are not following this user" });
+    // // Check if the user is not following the other user
+    if (!user.following.includes(userToUnfollow._id)) {
+      return res.json({ message: "You are not following this user" });
     }
 
-    // Remove unfollowId from the following array of the current user
-    user.following.pull(unfollowId);
+    // Remove userToUnfollow._id from the following array of the current user
+    user.following.pull(userToUnfollow._id);
     await user.save();
 
-    // Remove userId from the followers array of the user being unfollowed
-    userToUnfollow.followers.pull(userId);
+    // Remove user._id from the followers array of the user being unfollowed
+    userToUnfollow.followers.pull(user._id);
     await userToUnfollow.save();
 
     res.json({ message: "User unfollowed successfully" });
@@ -157,6 +161,7 @@ router.put("/unfollow/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 router.get("/friends/:userId", authMiddleware, async (req, res) => {
   try {
