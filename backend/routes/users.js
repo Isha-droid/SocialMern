@@ -3,8 +3,6 @@ const router = express.Router();
 const User = require("../models/User"); // Assuming User model is defined in ./User
 const authMiddleware = require('../middleware/authMiddleware'); // Path to your auth middleware
 const mongoose = require("mongoose");
-// Apply authMiddleware to all routes in this router
-// Update a user by ID (only the user themselves)
 router.put("/:id",authMiddleware, async (req, res) => {
   const { username, email, profilePicture, coverPicture, desc, city, relationship } = req.body;
   const userId = req.params.id;
@@ -12,7 +10,6 @@ router.put("/:id",authMiddleware, async (req, res) => {
   console.log(userId)
   console.log(loggedInUserId)
   try {
-    // Check if the user making the request is the same as the user being updated
     if (userId != loggedInUserId) {
       return res.status(403).json({ message: "Unauthorized access" });
     }
@@ -42,7 +39,6 @@ router.put("/:id",authMiddleware, async (req, res) => {
   }
 });
 
-// Delete a user by ID (only the user themselves)
 router.delete("/:id", async (req, res) => {
   const userId = req.params.id;
   const loggedInUserId = req.user.userId; // Assuming you have this information in the request
@@ -162,7 +158,6 @@ router.put("/unfollow/:username", async (req, res) => {
   }
 });
 
-
 router.get("/friends/:userId", authMiddleware, async (req, res) => {
   try {
     // Find the user by ID
@@ -173,17 +168,41 @@ router.get("/friends/:userId", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Fetch the user's following (assumed to be friends)
-    const friends = await Promise.all(
-      user.following.map(async (friendId) => {
-        return await User.findById(friendId);
-      })
-    );
+    // Fetch all users from the database
+    let allUsers = await User.find();
 
-    res.json(friends);
+    // If there are more than 5 users, fetch the 5 most recently created users
+    if (allUsers.length > 5) {
+      allUsers = await User.find().sort({ createdAt: -1 }).limit(5);
+    }
+
+    res.json(allUsers);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+router.put('/update/:username',authMiddleware, async (req, res) => {
+  const { username } = req.params; // Get username from URL params
+  const updates = req.body; // Updated data from request body
+  console.log(updates)
+
+  try {
+    // Find user by username and update
+    const updatedUser = await User.findOneAndUpdate({ username }, updates);
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Optionally, you can perform additional validations or actions here
+
+    res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

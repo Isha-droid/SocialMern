@@ -7,6 +7,8 @@ import Profile from './pages/profile/Profile';
 import './App.css';
 import Topbar from './components/topbar/Topbar';
 import { AuthContext, AuthContextProvider } from './context/AuthContext';
+import UpdateForm from './pages/update-form/UpdateForm';
+UpdateForm
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -33,6 +35,10 @@ function App() {
             <Route
               path="/profile/:username"
               element={<Profile /> }
+            />
+            <Route
+              path="/updateProfile/:username"
+              element={<UpdateForm/> }
             />
           </Routes>
         </div>

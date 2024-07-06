@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams} from 'react-router-dom';
 import { FaHeart, FaRegComment, FaShare, FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
 import { formatDistanceToNow } from 'date-fns';
@@ -14,6 +14,7 @@ const UserProfile = () => {
   const [following, setFollowing] = useState(false);
   const [followers, setFollowers] = useState(0);
   const [showLikesModal, setShowLikesModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false); // state for update modal
   const [points, setPoints] = useState(0);
   const [discount, setDiscount] = useState(0);
 
@@ -56,6 +57,10 @@ const UserProfile = () => {
     setShowLikesModal(!showLikesModal);
   };
 
+  const toggleUpdateModal = () => {
+    setShowUpdateModal(!showUpdateModal);
+  };
+
   const handleGoLive = () => {
     alert('You are now live!');
   };
@@ -66,7 +71,6 @@ const UserProfile = () => {
         followUsername: user.username,
       });
       alert(response.data.message)
-
 
       if (response.data.message === "User followed successfully") {
         setFollowing(true);
@@ -96,6 +100,8 @@ const UserProfile = () => {
     }
   };
 
+  
+
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -118,7 +124,7 @@ const UserProfile = () => {
                   <FaUserCircle className="text-4xl text-pink-600 cursor-pointer" />
                   <span className="text-gray-600">{followers} Followers</span>
                 </div>
-                {currentUser._id != user._id && (
+                {currentUser._id !== user._id && (
                   <div className="flex space-x-4">
                     <button
                       onClick={handleFollow}
@@ -134,7 +140,12 @@ const UserProfile = () => {
                     </button>
                   </div>
                 )}
-
+                {currentUser._id === user._id && (
+                       <Link to={`/updateProfile/${username}`} className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300">
+                       Update Profile
+                     </Link>
+               
+                )}
               </div>
             </div>
           </div>
@@ -195,6 +206,23 @@ const UserProfile = () => {
             <button onClick={toggleLikesModal} className="mt-4 bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300">
               Close
             </button>
+          </div>
+        </div>
+      )}
+
+      {showUpdateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg overflow-y-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Update Profile</h2>
+            <p className="text-gray-600 mb-4">Are you sure you want to update your profile?</p>
+            <div className="flex space-x-4">
+              <button onClick={redirectToUpdateProfile} className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300">
+                Yes
+              </button>
+              <button onClick={toggleUpdateModal} className="bg-gray-300 text-gray-600 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300">
+                No
+              </button>
+            </div>
           </div>
         </div>
       )}
