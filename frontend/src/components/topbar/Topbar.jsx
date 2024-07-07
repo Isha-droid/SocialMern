@@ -45,9 +45,9 @@ const Topbar = () => {
             <button className="p-1 rounded-full text-gray-900 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
               <FaBell className="h-6 w-6" aria-hidden="true" />
             </button>
-            <button className="p-1 rounded-full text-gray-900 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+            <a href="/forum" className="p-1 rounded-full text-gray-900 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
               <FaEnvelope className="h-6 w-6" aria-hidden="true" />
-            </button>
+            </a>
             <button className="p-1 rounded-full text-gray-900 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
               <FiShoppingBag className="h-6 w-6" aria-hidden="true" />
             </button>

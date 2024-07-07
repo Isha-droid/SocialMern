@@ -6,6 +6,8 @@ const morgan= require("morgan")
 const userRoute = require("./routes/users"); // Import userRoute module
 const authRoute = require("./routes/auth"); // Import userRoute module
 const postRoute = require("./routes/post"); // Import userRoute module
+const messageRoute = require("./routes/message"); // Import userRoute module
+
 const cors = require('cors');
 
 
@@ -22,6 +24,8 @@ app.use(morgan("common"))
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/post", postRoute);
+app.use("/api/message", messageRoute);
+
 
 
 

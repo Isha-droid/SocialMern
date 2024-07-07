@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
     user = new User({
       username,
       email,
-      password: hashedPassword,
+      password,
     });
 
     // Save the user to the database
