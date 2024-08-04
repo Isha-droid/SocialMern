@@ -1,1 +1,1 @@
-user engagement platform using mern 
+user engagement platform using mern stack 
