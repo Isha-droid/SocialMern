@@ -1,1 +1,2 @@
-User engagement platform using MERN stack 
+User engagement platform using MERN stack .
+
